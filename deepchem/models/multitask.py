@@ -2,6 +2,7 @@
 Convenience class that lets singletask models fit on multitask data.
 """
 import os
+from tqdm import tqdm
 import sklearn
 import tempfile
 import numpy as np
@@ -102,7 +103,7 @@ class SingletaskToMultitask(Model):
       raise ValueError('SingletaskToMultitask only works with DiskDatasets')
     logger.info("About to create task-specific datasets")
     task_datasets = self._create_task_datasets(dataset)
-    for ind, task in enumerate(self.tasks):
+    for ind, task in enumerate(tqdm(self.tasks, desc='Fitting')):
       logger.info("Fitting model for task %s" % task)
       task_model = self.model_builder(self.task_model_dirs[task])
       task_model.fit(task_datasets[ind], **kwargs)
@@ -130,7 +131,7 @@ class SingletaskToMultitask(Model):
     n_tasks = len(self.tasks)
     n_samples = len(dataset)
     y_preds = []
-    for ind, task in enumerate(self.tasks):
+    for ind, task in enumerate(tqdm(self.tasks, desc='Predicting')):
       task_model = self.model_builder(self.task_model_dirs[task])
       task_model.reload()
 

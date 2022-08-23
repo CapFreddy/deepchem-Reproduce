@@ -25,7 +25,8 @@ def benchmark_classification(train_dataset,
                              model,
                              test=False,
                              hyper_parameters=None,
-                             seed=123):
+                             seed=123,
+                             model_dir=None):
   """
   Calculate performance of different models on the specific dataset & tasks
 
@@ -301,12 +302,12 @@ def benchmark_classification(train_dataset,
     # Building scikit random forest model
     def model_builder(model_dir):
       sklearn_model = RandomForestClassifier(
-          class_weight="balanced", n_estimators=n_estimators, n_jobs=-1)
+          class_weight="balanced", n_estimators=10, n_jobs=-1)
       return deepchem.models.sklearn_models.SklearnModel(
           sklearn_model, model_dir)
 
     model = deepchem.models.multitask.SingletaskToMultitask(
-        tasks, model_builder)
+        tasks, model_builder, model_dir=model_dir)
 
   elif model_name == 'kernelsvm':
     C = hyper_parameters['C']
@@ -320,7 +321,7 @@ def benchmark_classification(train_dataset,
       return deepchem.models.SklearnModel(sklearn_model, model_dir)
 
     model = deepchem.models.multitask.SingletaskToMultitask(
-        tasks, model_builder)
+        tasks, model_builder, model_dir=model_dir)
 
   elif model_name == 'xgb':
     max_depth = hyper_parameters['max_depth']

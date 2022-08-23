@@ -632,9 +632,13 @@ class Metric(object):
                                n_tasks)
     computed_metrics = []
     for task in range(n_tasks):
-      y_task = y_true_arr[:, task]
-      y_pred_arr_task = y_pred_arr[:, task]
       w_task = w[:, task]
+      y_task = y_true_arr[:, task][w_task != 0]
+      y_pred_arr_task = y_pred_arr[:, task][w_task != 0]
+      w_task = w[:, task][w_task != 0]
+
+      if (y_task == [0, 1]).all() or (y_task == [1, 0]).all():
+        continue
 
       metric_value = self.compute_singletask_metric(
           y_task,
@@ -643,6 +647,10 @@ class Metric(object):
           use_sample_weights=use_sample_weights,
           **kwargs)
       computed_metrics.append(metric_value)
+
+    if len(computed_metrics) < n_tasks:
+      print(f'{len(computed_metrics)} of {n_tasks} tasks are missing.')
+
     logger.info("computed_metrics: %s" % str(computed_metrics))
     if n_tasks == 1:
       # FIXME: Incompatible types in assignment

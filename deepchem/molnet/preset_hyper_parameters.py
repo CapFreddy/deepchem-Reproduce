@@ -80,7 +80,7 @@ hps['textcnn'] = {
     'seed': 123
 }
 hps['rf'] = {'n_estimators': 500}
-hps['kernelsvm'] = {'C': 1.0, 'gamma': 0.05}
+hps['kernelsvm'] = {'C': 1.0, 'gamma': 1e-5}
 hps['xgb'] = {
     'max_depth': 5,
     'learning_rate': 0.05,
