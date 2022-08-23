@@ -18,7 +18,7 @@ def save_dataset_splits(dataset, data_seed):
                                       shard_size=8192)
 
     train_indices, val_indices, test_indices = \
-        train_val_test_split(dataset=dataset, random_state=data_seed, return_indices=True)
+        train_val_test_split(dataset=dataset, return_indices=True, random_state=data_seed)
 
     train = data_list.select(indices=train_indices)
     val = data_list.select(indices=val_indices)
